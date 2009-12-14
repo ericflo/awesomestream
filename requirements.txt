@@ -1,0 +1,7 @@
+werkzeug
+simplejson
+
+# Optional
+cherrypy
+sqlalchemy
+git+git://github.com/andymccurdy/redis-py.git#egg=redis
