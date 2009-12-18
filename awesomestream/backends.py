@@ -195,7 +195,7 @@ class SQLBackend(BaseBackend):
         self.table.insert().execute(**dct)
     
     def items(self, start=0, end=20, **kwargs):
-        query = self.table.select().order_by(self.table.c.date.desc())
+        query = self.table.select()
         for key, value in kwargs.iteritems():
             if isinstance(value, list):
                 values = [unicode(v).encode('utf-8') for v in value]
@@ -203,6 +203,7 @@ class SQLBackend(BaseBackend):
             else:
                 value = unicode(value).encode('utf-8')
                 query = query.where(getattr(self.table.c, key)==value)
-        query = query.offset(start).limit(end-start)
+        query = query.offset(start).limit(end-start).order_by(
+            self.table.c.date.desc())
         result = query.execute()
         return [self.deserialize(row['data']) for row in result]
