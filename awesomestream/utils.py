@@ -40,7 +40,7 @@ def permutations(lst):
 
 def coerce_ts(value):
     if value is None:
-        value = int(time.time() * 1e6)
+        return int(time.time() * 1e6)
     if isinstance(value, float):
         value = int(value * 1e6)
     if isinstance(value, datetime.timedelta):
@@ -54,7 +54,7 @@ def coerce_ts(value):
 
 def coerce_dt(value):
     if value is None:
-        value = datetime.datetime.now()
+        return datetime.datetime.now()
     if isinstance(value, (float, int)):
         value = value / float(1e6)
     if isinstance(value, float):
