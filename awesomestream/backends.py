@@ -1,16 +1,16 @@
 import collections
 import datetime
 import simplejson
-import time
 import uuid
 
 from awesomestream.utils import all_combinations, permutations
+from awesomestream.utils import coerce_ts, coerce_dt
 
 class BaseBackend(object):
     def __init__(self, keys=None):
         self.keys = keys or []
     
-    def insert(self, data):
+    def insert(self, data, date=None):
         raise NotImplementedError
     
     def keys_from_keydict(self, keydict):
@@ -60,12 +60,12 @@ class MemoryBackend(BaseBackend):
         self._items = {}
         self._indices = collections.defaultdict(lambda: [])
     
-    def insert(self, data):
+    def insert(self, data, date=None):
         key = str(uuid.uuid1())
         
         self._items[key] = self.serialize(data)
         
-        t = int(time.time() * 1e6)
+        t = coerce_ts(date)
         
         # Insert into the global index
         self._indices['_all'].insert(0, (t, key))
@@ -111,12 +111,12 @@ class RedisBackend(BaseBackend):
         from redis import Redis
         self.client = Redis(host=host, port=port, db=db)
     
-    def insert(self, data):
+    def insert(self, data, date=None):
         key = str(uuid.uuid1())
         
         self.client.set(key, self.serialize(data))
         
-        serialized_key = self.serialize((int(time.time() * 1e6), key))
+        serialized_key = self.serialize((coerce_ts(date), key))
         
         # Insert into the global index
         self.client.push('_all', serialized_key, head=True)
@@ -180,11 +180,12 @@ class SQLBackend(BaseBackend):
         )
         self.table.create(bind=self.engine, checkfirst=True)
     
-    def insert(self, data):
+    def insert(self, data, date=None):
         key = str(uuid.uuid1())
         dct = {
             'key': key,
             'data': self.serialize(data),
+            'date': coerce_dt(date),
         }
         for k in self.keys:
             value = data.get(k)

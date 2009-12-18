@@ -1,3 +1,6 @@
+import time
+import datetime
+
 def combinations(iterable, r):
     pool = tuple(iterable)
     n = len(pool)
@@ -34,3 +37,31 @@ def permutations(lst):
         yield [lst[i][idx] for i, idx in enumerate(current)]
         if current == maxes:
             raise StopIteration
+
+def coerce_ts(value):
+    if value is None:
+        value = int(time.time() * 1e6)
+    if isinstance(value, float):
+        value = int(value * 1e6)
+    if isinstance(value, datetime.timedelta):
+        value = datetime.datetime.now() + value
+    if isinstance(value, datetime.date):
+        value = datetime.datetime(year=value.year, month=value.month,
+            day=value.day)
+    if isinstance(value, datetime.datetime):
+        value = int(time.mktime(value.timetuple()) * 1e6)
+    return value
+
+def coerce_dt(value):
+    if value is None:
+        value = datetime.datetime.now()
+    if isinstance(value, (float, int)):
+        value = value / float(1e6)
+    if isinstance(value, float):
+        value = datetime.fromtimestamp(value)
+    if isinstance(value, datetime.date):
+        value = datetime.datetime(year=value.year, month=value.month,
+            day=value.day)
+    if isinstance(value, datetime.timedelta):
+        value = datetime.datetime.now() + value
+    return value
