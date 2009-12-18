@@ -58,7 +58,7 @@ def coerce_dt(value):
     if isinstance(value, (float, int)):
         value = value / float(1e6)
     if isinstance(value, float):
-        value = datetime.fromtimestamp(value)
+        value = datetime.datetime.fromtimestamp(value)
     if isinstance(value, datetime.date):
         value = datetime.datetime(year=value.year, month=value.month,
             day=value.day)
