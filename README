@@ -24,7 +24,7 @@ First, we'll set up a simple redis-based server:
     ... )
     >>> 
     >>> app = create_app(backend)
-    >>> run_server(app, 8080)
+    >>> run_server(app, 9997)
 
 This simple script sets up a Redis-based AwesomeStream server--one that pays
 special attention to the 'user', 'kind', and 'repo' keys.  This will make a
@@ -33,7 +33,7 @@ bit more sense in a bit.
 In another console, we're going to instantiate a client.
 
     >>> from awesomestream.jsonrpc import Client
-    >>> c = Client('http://127.0.0.1:8080/')
+    >>> c = Client('http://127.0.0.1:9997/')
 
 OK, now that we've set up our client, lets start logging user actions.  Look,
 a user has just created a new repo!

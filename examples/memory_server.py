@@ -10,4 +10,4 @@ from awesomestream.jsonrpc import create_app, run_server
 if __name__ == '__main__':
     backend = MemoryBackend(keys=['kind', 'user', 'game'])
     app = create_app(backend)
-    run_server(app, 8080)
+    run_server(app, 9997)

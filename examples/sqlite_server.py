@@ -13,4 +13,4 @@ if __name__ == '__main__':
         keys=['kind', 'user', 'game'],
     )
     app = create_app(backend)
-    run_server(app, 8080)
+    run_server(app, 9997)

@@ -8,7 +8,7 @@ from awesomestream.jsonrpc import Client
 from pprint import pprint
 
 if __name__ == '__main__':
-    c = Client('http://127.0.0.1:8080/')
+    c = Client('http://127.0.0.1:9997/')
     items = [
         {'kind': 'play', 'user': 1, 'game': 'bloons'},
         {'kind': 'play', 'user': 1, 'game': 'ryokan'},
