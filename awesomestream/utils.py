@@ -1,6 +1,48 @@
 import time
 import datetime
 
+def coerce_ts(value=None):
+    '''
+    Given a variety of inputs, this function will return the proper
+    timestamp (a float).  If None or no value is given, then it will
+    return the current timestamp.
+    '''
+    if value is None:
+        return time.time()
+    if isinstance(value, int):
+        value = float(value)
+    if isinstance(value, datetime.timedelta):
+        value = datetime.datetime.now() + value
+    if isinstance(value, datetime.date):
+        value = datetime.datetime(year=value.year, month=value.month,
+            day=value.day)
+    if isinstance(value, datetime.datetime):
+        value = float(time.mktime(value.timetuple()) * 1e6)
+    return value
+
+def coerce_dt(value=None):
+    '''
+    Given a variety of inputs, this function will return the proper
+    ``datetime.datetime`` instance.  If None or no value is given, then
+    it will return ``datetime.datetime.now()``.
+    '''
+    if value is None:
+        return datetime.datetime.now()
+    if isinstance(value, int):
+        value = float(value)
+    if isinstance(value, float):
+        return datetime.datetime.fromtimestamp(value)
+    if isinstance(value, datetime.date):
+        return datetime.datetime(year=value.year, month=value.month,
+            day=value.day)
+    if isinstance(value, datetime.timedelta):
+        value = datetime.datetime.now() + value
+    return value
+
+# TODO: The following are not the proper function names. Should figure out
+#       exactly what we want to call these so that it's less ambiguous to
+#       someone new to the code.
+
 def combinations(iterable, r):
     pool = tuple(iterable)
     n = len(pool)
@@ -37,31 +79,3 @@ def permutations(lst):
         yield [lst[i][idx] for i, idx in enumerate(current)]
         if current == maxes:
             raise StopIteration
-
-def coerce_ts(value):
-    if value is None:
-        return int(time.time() * 1e6)
-    if isinstance(value, float):
-        value = int(value * 1e6)
-    if isinstance(value, datetime.timedelta):
-        value = datetime.datetime.now() + value
-    if isinstance(value, datetime.date):
-        value = datetime.datetime(year=value.year, month=value.month,
-            day=value.day)
-    if isinstance(value, datetime.datetime):
-        value = int(time.mktime(value.timetuple()) * 1e6)
-    return value
-
-def coerce_dt(value):
-    if value is None:
-        return datetime.datetime.now()
-    if isinstance(value, (float, int)):
-        value = value / float(1e6)
-    if isinstance(value, float):
-        value = datetime.datetime.fromtimestamp(value)
-    if isinstance(value, datetime.date):
-        value = datetime.datetime(year=value.year, month=value.month,
-            day=value.day)
-    if isinstance(value, datetime.timedelta):
-        value = datetime.datetime.now() + value
-    return value
